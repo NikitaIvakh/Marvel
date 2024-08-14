@@ -83,7 +83,7 @@ const View = ({ char }) => {
 	const thumbnailNotFound = thumbnail.includes(
 		'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg'
 	)
-	const imgStyle = thumbnailNotFound ? { objectFit: 'contain' } : null
+	const imgStyle = thumbnailNotFound ? { objectFit: 'fill' } : null
 
 	return (
 		<div className='randomchar__block'>
