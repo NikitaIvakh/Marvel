@@ -44,7 +44,11 @@ class CharList extends Component {
 			const imgStyle = imgNotFound ? { objectFit: 'fill' } : null
 
 			return (
-				<li className='char__item' key={id}>
+				<li
+					className='char__item'
+					key={id}
+					onClick={() => this.props.onCharSelected(id)}
+				>
 					<img src={thumbnail} alt={name} style={imgStyle} />
 					<div className='char__name'>{name}</div>
 				</li>
