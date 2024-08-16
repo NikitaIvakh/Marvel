@@ -1,7 +1,6 @@
-import PropTypes from 'prop-types'
 import { Component } from 'react'
 import MarvelService from '../../services/MarvelService'
-import ErrorMessage from '../errorMessage/ErrorMessage'
+import CharListError from '../errors/CharListError'
 import Spinner from '../spinner/Spinner'
 import './charList.scss'
 
@@ -12,27 +11,27 @@ class CharList extends Component {
 			characters: [],
 			loading: true,
 			error: false,
-			newItemLoading: false,
 			offset: 0,
+			newItemLoading: false,
 			charEnded: false,
 		}
 	}
 
-	marvelService = new MarvelService()
-
 	componentDidMount() {
-		this.onRequest()
+		this.onUpdateCharacters()
 	}
 
-	onRequest = offset => {
-		this.onCharListLoading()
+	marvelService = new MarvelService()
+
+	onUpdateCharacters = offset => {
+		this.onCharactersListLoading()
 		this.marvelService
 			.getAllCharacters(offset)
-			.then(this.onCharListLoaded)
+			.then(this.onCharactersLoaded)
 			.catch(this.onError)
 	}
 
-	onCharListLoaded = newCharacters => {
+	onCharactersLoaded = newCharacters => {
 		let ended = false
 		if (newCharacters.length < 9) ended = true
 
@@ -40,6 +39,7 @@ class CharList extends Component {
 			characters: [...characters, ...newCharacters],
 			loading: false,
 			newItemLoading: false,
+			error: false,
 			offset: offset + 9,
 			charEnded: ended,
 		}))
@@ -49,13 +49,13 @@ class CharList extends Component {
 		this.setState({ error: true, loading: false })
 	}
 
-	onCharListLoading() {
+	onCharactersListLoading = () => {
 		this.setState({ newItemLoading: true })
 	}
 
 	itemRefs = []
 
-	setFocus = element => {
+	setRef = element => {
 		this.itemRefs.push(element)
 	}
 
@@ -66,26 +66,24 @@ class CharList extends Component {
 	}
 
 	renderItems(characters) {
-		const items = characters.map(({ id, name, thumbnail }, i) => {
+		const characterItems = characters.map(({ id, name, thumbnail }, i) => {
 			const imgUrl =
 				'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg'
-
-			const imgNotFound = thumbnail.includes(imgUrl)
-			const imgStyle = imgNotFound ? { objectFit: 'fill' } : null
+			const imgStyle = thumbnail === imgUrl ? { objectFit: 'fill' } : null
 
 			return (
 				<li
 					tabIndex={0}
-					ref={this.setFocus}
+					ref={this.setRef}
 					className='char__item'
 					key={id}
 					onClick={() => {
-						this.props.onCharSelected(id)
+						this.props.setCharId(id)
 						this.focusOnElement(i)
 					}}
 					onKeyPress={e => {
 						if (e.key === ' ' || e.key === 'Enter') {
-							this.props.onCharSelected(id)
+							this.props.setCharId(id)
 							this.focusOnElement(i)
 						}
 					}}
@@ -96,16 +94,16 @@ class CharList extends Component {
 			)
 		})
 
-		return <ul className='char__grid'>{items}</ul>
+		return <ul className='char__grid'>{characterItems}</ul>
 	}
 
 	render() {
-		const { characters, loading, error, newItemLoading, offset, charEnded } =
+		const { characters, loading, error, newItemLoading, charEnded, offset } =
 			this.state
-		const characterItems = this.renderItems(characters)
-		const errorMessage = error ? <ErrorMessage /> : null
+		const renderCharacters = this.renderItems(characters)
+		const errorMessage = error ? <CharListError /> : null
 		const spinner = loading ? <Spinner /> : null
-		const content = !(loading || errorMessage) ? characterItems : null
+		const content = !loading ? renderCharacters : null
 		const btnActive = newItemLoading
 			? { pointerEvents: 'none', opacity: 0.5, cursor: 'not-allowed' }
 			: null
@@ -118,7 +116,7 @@ class CharList extends Component {
 				<button
 					className='button button__main button__long'
 					disabled={newItemLoading}
-					onClick={() => this.onRequest(offset)}
+					onClick={() => this.onUpdateCharacters(offset)}
 					style={(btnActive, { display: charEnded ? 'none' : 'block' })}
 				>
 					<div className='inner'>load more</div>
@@ -126,10 +124,6 @@ class CharList extends Component {
 			</div>
 		)
 	}
-}
-
-CharList.propType = {
-	onCharSelected: PropTypes.func.isRequired,
 }
 
 export default CharList

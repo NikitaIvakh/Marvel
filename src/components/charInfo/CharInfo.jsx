@@ -1,7 +1,6 @@
-import PropTypes from 'prop-types'
 import { Component } from 'react'
 import MarvelService from '../../services/MarvelService'
-import ErrorMessage from '../errorMessage/ErrorMessage'
+import CharInfoError from '../errors/CharInfoError'
 import Skeleton from '../skeleton/Skeleton'
 import Spinner from '../spinner/Spinner'
 import './charInfo.scss'
@@ -16,43 +15,42 @@ class CharInfo extends Component {
 		}
 	}
 
-	marvelService = new MarvelService()
-
 	componentDidMount() {
-		this.updateCharacter()
+		this.onUpdateCharacter()
 	}
 
 	componentDidUpdate(prevProps) {
-		if (this.props.onCharSelected !== prevProps.onCharSelected)
-			this.updateCharacter()
+		if (this.props.setCharId !== prevProps.setCharId) this.onUpdateCharacter()
 	}
 
-	updateCharacter = () => {
-		const { onCharSelected } = this.props
-		if (!onCharSelected) return
-		this.onCharLoading()
+	marvelService = new MarvelService()
+
+	onUpdateCharacter = () => {
+		const { setCharId } = this.props
+		if (!setCharId) return
+		this.onCharacterLoading()
 		this.marvelService
-			.getCharacter(onCharSelected)
-			.then(this.onCharLoaded)
+			.getCharacter(setCharId)
+			.then(this.onCharacterLoaded)
 			.catch(this.onError)
 	}
 
-	onCharLoaded = char => {
+	onCharacterLoaded = char => {
 		this.setState({ char, loading: false })
 	}
 
-	onError = () => {
-		this.setState({ loading: false, error: true })
+	onCharacterLoading = () => {
+		this.setState({ loading: true })
 	}
 
-	onCharLoading = () => {
-		this.setState({ loading: true })
+	onError = () => {
+		this.setState({ error: true, loading: false })
 	}
 
 	render() {
 		const { char, loading, error } = this.state
 		const skeleton = char || loading || error ? null : <Skeleton />
-		const errorMessage = error ? <ErrorMessage /> : null
+		const errorMessage = error ? <CharInfoError /> : null
 		const spinner = loading ? <Spinner /> : null
 		const content = !(loading || errorMessage || !char) ? (
 			<View char={char} />
@@ -71,16 +69,14 @@ class CharInfo extends Component {
 
 const View = ({ char }) => {
 	const { name, thumbnail, description, homepage, wiki, comics } = char
-	const imgNotFound = thumbnail.includes(
+	const imgUrl =
 		'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg'
-	)
-
-	const imgStyles = imgNotFound ? { objectFit: 'fill' } : null
+	const imgStyle = thumbnail === imgUrl ? { objectFit: 'fill' } : null
 
 	return (
 		<>
 			<div className='char__basics'>
-				<img src={thumbnail} alt={name} style={imgStyles} />
+				<img src={thumbnail} alt={name} style={imgStyle} />
 				<div>
 					<div className='char__info-name'>{name}</div>
 					<div className='char__btns'>
@@ -97,19 +93,17 @@ const View = ({ char }) => {
 			<div className='char__comics'>Comics:</div>
 			<ul className='char__comics-list'>
 				{comics.length > 0
-					? comics.slice(0, 10).map((item, i) => (
-							<li className='char__comics-item' key={i}>
-								{item.name}
-							</li>
-					  ))
+					? comics.slice(0, 10).map((item, i) => {
+							return (
+								<li className='char__comics-item' key={i}>
+									{item.name}
+								</li>
+							)
+					  })
 					: 'There is no comics with this character.'}
 			</ul>
 		</>
 	)
-}
-
-CharInfo.propTypes = {
-	onCharSelected: PropTypes.number,
 }
 
 export default CharInfo

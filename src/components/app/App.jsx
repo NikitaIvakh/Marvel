@@ -2,9 +2,8 @@ import { Component } from 'react'
 import AppHeader from '../appHeader/AppHeader'
 import CharInfo from '../charInfo/CharInfo'
 import CharList from '../charList/CharList'
-import ErrorBoundaryCharInfo from '../errorBoundaries/ErrorBoundaryCharInfo'
-import ErrorBoundaryCharList from '../errorBoundaries/ErrorBoundaryCharList'
-import ErrorBoundaryRandomChar from '../errorBoundaries/ErrorBoundaryRandomChar'
+import CharInfoErrorBoundary from '../errorBoundaries/CharInfoErrorBoundary'
+import RandomCharErrorBoundary from '../errorBoundaries/RandomCharErrorBoundary'
 import RandomChar from '../randomChar/RandomChar'
 
 import decoration from '../../resources/img/vision.png'
@@ -13,12 +12,12 @@ class App extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			selectedChar: null,
+			charId: null,
 		}
 	}
 
-	onCharSelected = id => {
-		this.setState({ selectedChar: id })
+	setCharId = id => {
+		this.setState({ charId: id })
 	}
 
 	render() {
@@ -26,16 +25,14 @@ class App extends Component {
 			<div className='app'>
 				<AppHeader />
 				<main>
-					<ErrorBoundaryRandomChar>
+					<RandomCharErrorBoundary>
 						<RandomChar />
-					</ErrorBoundaryRandomChar>
+					</RandomCharErrorBoundary>
 					<div className='char__content'>
-						<ErrorBoundaryCharList>
-							<CharList onCharSelected={this.onCharSelected} />
-						</ErrorBoundaryCharList>
-						<ErrorBoundaryCharInfo>
-							<CharInfo onCharSelected={this.state.selectedChar} />
-						</ErrorBoundaryCharInfo>
+						<CharList setCharId={this.setCharId} />
+						<CharInfoErrorBoundary>
+							<CharInfo setCharId={this.state.charId} />
+						</CharInfoErrorBoundary>
 					</div>
 					<img className='bg-decoration' src={decoration} alt='vision' />
 				</main>

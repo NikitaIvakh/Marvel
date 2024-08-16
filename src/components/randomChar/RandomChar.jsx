@@ -1,7 +1,7 @@
 import { Component } from 'react'
 import mjolnir from '../../resources/img/mjolnir.png'
 import MarvelService from '../../services/MarvelService'
-import ErrorMessage from '../errorMessage/ErrorMessage'
+import RandomCharError from '../errors/RandomCharError'
 import Spinner from '../spinner/Spinner'
 import './randomChar.scss'
 
@@ -12,43 +12,47 @@ class RandomChar extends Component {
 			char: {},
 			loading: true,
 			error: false,
-			btnClick: false,
+			btnActive: false,
 		}
+	}
+
+	componentDidMount() {
+		this.onUpdateCharacter()
 	}
 
 	marvelService = new MarvelService()
 
-	componentDidMount() {
-		this.updateChar()
-	}
-
-	updateChar = () => {
+	onUpdateCharacter = () => {
 		const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000)
-		this.onCharLoading()
+		this.onLoadingCharacter()
 		this.marvelService
 			.getCharacter(id)
-			.then(this.onCharLoaded)
+			.then(this.onLoadedCharacter)
 			.catch(this.onError)
 	}
 
-	onCharLoaded = char => {
-		this.setState({ char, loading: false, btnClick: false })
+	onLoadedCharacter = char => {
+		this.setState({ char, loading: false, btnActive: false })
+	}
+
+	onLoadingCharacter = () => {
+		this.setState({ loading: true, error: false, btnActive: true })
 	}
 
 	onError = () => {
-		this.setState({ loading: false, error: true, btnClick: false })
+		this.setState({ error: true, loading: false, btnActive: false })
 	}
 
-	onCharLoading = () => {
-		this.setState({ loading: true, error: false, btnClick: true })
+	onClickBtn = () => {
+		this.setState({ btnActive: true })
 	}
 
 	render() {
-		const { char, loading, error, btnClick } = this.state
-		const errorMessage = error ? <ErrorMessage /> : null
+		const { char, loading, error, btnActive } = this.state
+		const errorMessage = error ? <RandomCharError /> : null
 		const spinner = loading ? <Spinner /> : null
 		const content = !(loading || errorMessage) ? <View char={char} /> : null
-		const btnActive = btnClick
+		const btnActiveStyle = btnActive
 			? { pointerEvents: 'none', opacity: 0.5, cursor: 'not-allowed' }
 			: null
 
@@ -66,8 +70,8 @@ class RandomChar extends Component {
 					<p className='randomchar__title'>Or choose another one</p>
 					<button
 						className='button button__main'
-						onClick={this.updateChar}
-						style={btnActive}
+						onClick={this.onUpdateCharacter}
+						style={btnActiveStyle}
 					>
 						<div className='inner'>try it</div>
 					</button>
@@ -79,11 +83,10 @@ class RandomChar extends Component {
 }
 
 const View = ({ char }) => {
-	const { name, thumbnail, description, homepage, wiki } = char
-	const thumbnailNotFound = thumbnail.includes(
+	const { name, description, thumbnail, homepage, wiki } = char
+	const imgUrl =
 		'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg'
-	)
-	const imgStyle = thumbnailNotFound ? { objectFit: 'fill' } : null
+	const imgStyle = thumbnail === imgUrl ? { objectFit: 'fill' } : null
 
 	return (
 		<div className='randomchar__block'>
@@ -98,7 +101,7 @@ const View = ({ char }) => {
 				<p className='randomchar__descr'>{description}</p>
 				<div className='randomchar__btns'>
 					<a href={homepage} className='button button__main'>
-						<div className='inner'>Homepage</div>
+						<div className='inner'>homepage</div>
 					</a>
 					<a href={wiki} className='button button__secondary'>
 						<div className='inner'>Wiki</div>
