@@ -1,42 +1,26 @@
-import { useCallback, useEffect, useState } from 'react'
-import MarvelService from '../../services/MarvelService'
+import { useEffect, useState } from 'react'
+import useMarvelService from '../../services/MarvelService'
 import CharInfoError from '../errors/CharInfoError'
 import Skeleton from '../skeleton/Skeleton'
 import Spinner from '../spinner/Spinner'
 import './charInfo.scss'
 
-const marvelService = new MarvelService()
-
 const CharInfo = ({ onCharSelected }) => {
 	const [char, setChar] = useState(null)
-	const [loading, setLoading] = useState(false)
-	const [error, setError] = useState(false)
-
-	const onUpdateCharacter = useCallback(() => {
-		if (!onCharSelected) return
-		onCharacterLoading()
-		marvelService
-			.getCharacter(onCharSelected)
-			.then(onCharacterLoaded)
-			.catch(onError)
-	}, [onCharSelected])
+	const { loading, error, getCharacter, clearError } = useMarvelService()
 
 	useEffect(() => {
 		onUpdateCharacter()
-	}, [onUpdateCharacter])
+	}, [onCharSelected])
+
+	const onUpdateCharacter = () => {
+		if (!onCharSelected) return
+		clearError()
+		getCharacter(onCharSelected).then(onCharacterLoaded)
+	}
 
 	const onCharacterLoaded = char => {
 		setChar(char)
-		setLoading(false)
-	}
-
-	const onCharacterLoading = () => {
-		setLoading(true)
-	}
-
-	const onError = () => {
-		setError(true)
-		setLoading(true)
 	}
 
 	const skeleton = char || loading || error ? null : <Skeleton />

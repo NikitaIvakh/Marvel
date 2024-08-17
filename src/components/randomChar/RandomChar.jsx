@@ -1,52 +1,37 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import mjolnir from '../../resources/img/mjolnir.png'
-import MarvelService from '../../services/MarvelService'
+import useMarvelService from '../../services/MarvelService'
 import RandomCharError from '../errors/RandomCharError'
 import Spinner from '../spinner/Spinner'
 import './randomChar.scss'
 
-const marvelService = new MarvelService()
-
 const RandomChar = () => {
 	const [char, setChar] = useState({})
-	const [loading, setLoading] = useState(true)
-	const [error, setError] = useState(false)
-	const [btnActive, setBtnActive] = useState(false)
-
-	const onUpdateCharacter = useCallback(() => {
-		console.log('callback')
-		const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000)
-		onLoadingCharacter()
-		marvelService.getCharacter(id).then(onLoadedCharacter).catch(onError)
-	}, [])
+	const { loading, error, getCharacter, clearError } = useMarvelService()
 
 	useEffect(() => {
-		console.log('effect')
 		onUpdateCharacter()
-	}, [onUpdateCharacter])
+		const timerId = setInterval(onUpdateCharacter, 60000)
+
+		return () => {
+			clearInterval(timerId)
+		}
+	}, [])
+
+	const onUpdateCharacter = () => {
+		clearError()
+		const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000)
+		getCharacter(id).then(onLoadedCharacter)
+	}
 
 	const onLoadedCharacter = char => {
 		setChar(char)
-		setLoading(false)
-		setBtnActive(false)
-	}
-
-	const onLoadingCharacter = () => {
-		setLoading(true)
-		setError(false)
-		setBtnActive(true)
-	}
-
-	const onError = () => {
-		setError(true)
-		setLoading(false)
-		setBtnActive(false)
 	}
 
 	const errorMessage = error ? <RandomCharError /> : null
 	const spinner = loading ? <Spinner /> : null
 	const content = !(loading || errorMessage) ? <View char={char} /> : null
-	const btnActiveStyle = btnActive
+	const btnActiveStyle = loading
 		? { pointerEvents: 'none', opacity: 0.5, cursor: 'not-allowed' }
 		: null
 
