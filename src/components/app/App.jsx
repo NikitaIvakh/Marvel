@@ -1,32 +1,28 @@
-import AppBanner from '../appBanner/AppBanner'
+import {
+	BrowserRouter,
+	Route,
+	Switch,
+} from 'react-router-dom/cjs/react-router-dom.min'
 import AppHeader from '../appHeader/AppHeader'
-import ComicsList from '../comicsList/ComicsList'
+import { ComicsPage, MainPage } from '../pages'
 
 const App = () => {
-	// const [selectedChar, setChar] = useState(null)
-
-	// const onCharSelected = id => {
-	// 	setChar(id)
-	// }
-
 	return (
-		<div className='app'>
-			<AppHeader />
-			<main>
-				<AppBanner />
-				{/* <RandomCharErrorBoundary>
-					<RandomChar />
-				</RandomCharErrorBoundary> */}
-				{/* <div className='char__content'>
-					<CharList onCharSelected={onCharSelected} />
-					<CharInfoErrorBoundary>
-						<CharInfo onCharSelected={selectedChar} />
-					</CharInfoErrorBoundary>
-				</div> */}
-				{/* <img className='bg-decoration' src={decoration} alt='vision' /> */}
-				<ComicsList />
-			</main>
-		</div>
+		<BrowserRouter>
+			<div className='app'>
+				<AppHeader />
+				<main>
+					<Switch>
+						<Route exact path='/'>
+							<MainPage />
+						</Route>
+						<Route exact path='/comics'>
+							<ComicsPage />
+						</Route>
+					</Switch>
+				</main>
+			</div>
+		</BrowserRouter>
 	)
 }
 
