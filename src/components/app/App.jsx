@@ -1,12 +1,7 @@
 import { useState } from 'react'
+import AppBanner from '../appBanner/AppBanner'
 import AppHeader from '../appHeader/AppHeader'
-import CharInfo from '../charInfo/CharInfo'
-import CharList from '../charList/CharList'
-import CharInfoErrorBoundary from '../errorBoundaries/CharInfoErrorBoundary'
-import RandomCharErrorBoundary from '../errorBoundaries/RandomCharErrorBoundary'
-import RandomChar from '../randomChar/RandomChar'
-
-import decoration from '../../resources/img/vision.png'
+import ComicsList from '../comicsList/ComicsList'
 
 const App = () => {
 	const [selectedChar, setChar] = useState(null)
@@ -19,16 +14,18 @@ const App = () => {
 		<div className='app'>
 			<AppHeader />
 			<main>
-				<RandomCharErrorBoundary>
+				<AppBanner />
+				{/* <RandomCharErrorBoundary>
 					<RandomChar />
-				</RandomCharErrorBoundary>
-				<div className='char__content'>
+				</RandomCharErrorBoundary> */}
+				{/* <div className='char__content'>
 					<CharList onCharSelected={onCharSelected} />
 					<CharInfoErrorBoundary>
 						<CharInfo onCharSelected={selectedChar} />
 					</CharInfoErrorBoundary>
-				</div>
-				<img className='bg-decoration' src={decoration} alt='vision' />
+				</div> */}
+				{/* <img className='bg-decoration' src={decoration} alt='vision' /> */}
+				<ComicsList />
 			</main>
 		</div>
 	)

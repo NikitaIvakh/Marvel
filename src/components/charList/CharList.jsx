@@ -77,9 +77,6 @@ const CharList = props => {
 	const renderCharacters = renderItems(characters)
 	const errorMessage = error ? <CharListError /> : null
 	const spinner = loading && !newItemLoading ? <Spinner /> : null
-	const btnActive = newItemLoading
-		? { pointerEvents: 'none', opacity: 0.5, cursor: 'not-allowed' }
-		: null
 
 	return (
 		<div className='char__list'>
@@ -88,9 +85,9 @@ const CharList = props => {
 			{renderCharacters}
 			<button
 				className='button button__main button__long'
-				disabled={newItemLoading}
+				disabled={loading}
 				onClick={() => onUpdateCharacters(offset)}
-				style={(btnActive, { display: charEnded ? 'none' : 'block' })}
+				style={{ display: charEnded ? 'none' : 'block' }}
 			>
 				<div className='inner'>load more</div>
 			</button>

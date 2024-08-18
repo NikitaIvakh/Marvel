@@ -1,10 +1,10 @@
 import errorGif from './error.gif'
 import './errorMessage.scss'
 
-const CharListError = () => {
+const ComicsListError = () => {
 	return (
 		<img src={errorGif} alt='character not found' className='errorMessage' />
 	)
 }
 
-export default CharListError
+export default ComicsListError
