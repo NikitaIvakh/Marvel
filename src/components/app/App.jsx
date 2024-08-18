@@ -1,14 +1,13 @@
-import { useState } from 'react'
 import AppBanner from '../appBanner/AppBanner'
 import AppHeader from '../appHeader/AppHeader'
 import ComicsList from '../comicsList/ComicsList'
 
 const App = () => {
-	const [selectedChar, setChar] = useState(null)
+	// const [selectedChar, setChar] = useState(null)
 
-	const onCharSelected = id => {
-		setChar(id)
-	}
+	// const onCharSelected = id => {
+	// 	setChar(id)
+	// }
 
 	return (
 		<div className='app'>

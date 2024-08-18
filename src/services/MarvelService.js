@@ -55,7 +55,7 @@ const useMarvelService = () => {
 				: 'There is no description for this comics.',
 			pageCount: res.pageCount
 				? `${res.pageCount} pages.`
-				: 'No information about the number of pages',
+				: 'No information about the number of pages.',
 		}
 	}
 
