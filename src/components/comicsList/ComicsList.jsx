@@ -33,12 +33,12 @@ const ComicsList = () => {
 	}
 
 	function renderComics(comics) {
-		const renderItems = comics.map(({ id, name, thumbnail, prices }, i) => {
+		const renderItems = comics.map(({ id, title, thumbnail, prices }, i) => {
 			return (
 				<li className='comics__item' key={i}>
 					<Link to={`/comics/${id}`}>
-						<img src={thumbnail} alt={name} className='comics__item-img' />
-						<div className='comics__item-name'>{name}</div>
+						<img src={thumbnail} alt={title} className='comics__item-img' />
+						<div className='comics__item-name'>{title}</div>
 						<div className='comics__item-price'>{prices}</div>
 					</Link>
 				</li>
