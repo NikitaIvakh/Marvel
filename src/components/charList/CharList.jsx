@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import { useEffect, useRef, useState } from 'react'
+import { CSSTransition } from 'react-transition-group'
 import useMarvelService from '../../services/MarvelService'
 import CharListError from '../errors/CharListError'
 import Spinner from '../spinner/Spinner'
@@ -33,6 +34,7 @@ const CharList = props => {
 	}
 
 	const itemRefs = useRef([])
+	const nodeRef = useRef(null)
 
 	const focusOnElement = id => {
 		itemRefs.current.forEach(item =>
@@ -47,27 +49,34 @@ const CharList = props => {
 			const imgUrl =
 				'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg'
 			const imgStyle = thumbnail === imgUrl ? { objectFit: 'fill' } : null
+			const duration = 500
 
 			return (
-				<li
-					tabIndex={0}
-					ref={el => (itemRefs.current[i] = el)}
-					className='char__item'
+				<CSSTransition
 					key={i}
-					onClick={() => {
-						props.onCharSelected(id)
-						focusOnElement(i)
-					}}
-					onKeyUp={e => {
-						if (e.key === ' ' || e.key === 'Enter') {
+					nodeRef={nodeRef}
+					timeout={duration}
+					classNames='char__item'
+				>
+					<li
+						tabIndex={0}
+						ref={el => (itemRefs.current[i] = el)}
+						className='char__item'
+						onClick={() => {
 							props.onCharSelected(id)
 							focusOnElement(i)
-						}
-					}}
-				>
-					<img src={thumbnail} alt={name} style={imgStyle} />
-					<div className='char__name'>{name}</div>
-				</li>
+						}}
+						onKeyUp={e => {
+							if (e.key === ' ' || e.key === 'Enter') {
+								props.onCharSelected(id)
+								focusOnElement(i)
+							}
+						}}
+					>
+						<img src={thumbnail} alt={name} style={imgStyle} />
+						<div className='char__name'>{name}</div>
+					</li>
+				</CSSTransition>
 			)
 		})
 
