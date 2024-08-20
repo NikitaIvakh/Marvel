@@ -54,7 +54,6 @@ const AnimatedRoutes = () => {
 							}
 						/>
 						<Route path='/comics' element={<ComicsPage />} />
-						<Route path='/comics/:id' element={<SingleComicLayout />} />
 						<Route path='*' element={<Page404 />} />
 					</Routes>
 				</div>
