@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import mjolnir from '../../resources/img/mjolnir.png'
 import useMarvelService from '../../services/MarvelService'
 import RandomCharError from '../errors/RandomCharError'
@@ -61,7 +62,7 @@ const RandomChar = () => {
 }
 
 const View = ({ char }) => {
-	const { name, description, thumbnail, homepage, wiki } = char
+	const { id, name, description, thumbnail, homepage, wiki } = char
 	const imgUrl =
 		'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg'
 	const imgStyle = thumbnail === imgUrl ? { objectFit: 'fill' } : null
@@ -75,7 +76,9 @@ const View = ({ char }) => {
 				style={imgStyle}
 			/>
 			<div className='randomchar__info'>
-				<p className='randomchar__name'>{name}</p>
+				<p className='randomchar__name'>
+					<Link to={`/characters/${id}`}>{name}</Link>
+				</p>
 				<p className='randomchar__descr'>{description}</p>
 				<div className='randomchar__btns'>
 					<a href={homepage} className='button button__main'>

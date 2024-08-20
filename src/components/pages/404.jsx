@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet'
 import { Link } from 'react-router-dom'
 import PageError from '../errors/PageError'
 import './page404.scss'
@@ -5,6 +6,10 @@ import './page404.scss'
 const Page404 = () => {
 	return (
 		<div>
+			<Helmet>
+				<meta name='description' content='This page was not found.' />
+				<title>This page was not found.</title>
+			</Helmet>
 			<div className='error'>
 				<div className='error__wrapper'>
 					<div className='error__descr'>
