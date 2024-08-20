@@ -1,6 +1,15 @@
 import Page404 from './404'
+import CharacterPage from './CharacterPage'
 import ComicsPage from './ComicsPage'
 import MainPage from './MainPage'
-import SingleComicPage from './SingleComicPage'
+import SingleCharacterLayout from './SingleCharacterLayout/SingleCharacterLayout'
+import SingleComicLayout from './SingleComicLayout/SingleComicLayout'
 
-export { ComicsPage, MainPage, Page404, SingleComicPage }
+export {
+	CharacterPage,
+	ComicsPage,
+	MainPage,
+	Page404,
+	SingleCharacterLayout,
+	SingleComicLayout,
+}

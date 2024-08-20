@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import decoration from '../../resources/img/vision.png'
+import CharacterSearchForm from '../characterSearchForm/CharacterSearchForm'
 import CharInfo from '../charInfo/CharInfo'
 import CharList from '../charList/CharList'
 import CharInfoErrorBoundary from '../errorBoundaries/CharInfoErrorBoundary'
@@ -20,9 +21,12 @@ const MainPage = () => {
 			</RandomCharErrorBoundary>
 			<div className='char__content'>
 				<CharList onCharSelected={onCharSelected} />
-				<CharInfoErrorBoundary>
-					<CharInfo onCharSelected={selectedChar} />
-				</CharInfoErrorBoundary>
+				<div>
+					<CharInfoErrorBoundary>
+						<CharInfo onCharSelected={selectedChar} />
+					</CharInfoErrorBoundary>
+					<CharacterSearchForm />
+				</div>
 			</div>
 			<img className='bg-decoration' src={decoration} alt='vision' />
 		</>

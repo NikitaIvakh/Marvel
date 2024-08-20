@@ -7,13 +7,19 @@ import {
 } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 import AppHeader from '../appHeader/AppHeader'
+import SinglePage from '../pages/SinglePage'
 import Spinner from '../spinner/Spinner'
 import './app.scss'
 
 const Page404 = lazy(() => import('../pages/404'))
 const MainPage = lazy(() => import('../pages/MainPage'))
 const ComicsPage = lazy(() => import('../pages/ComicsPage'))
-const SingleComicPage = lazy(() => import('../pages/SingleComicPage'))
+const SingleComicLayout = lazy(() =>
+	import('../pages/SingleComicLayout/SingleComicLayout')
+)
+const SingleCharacterLayout = lazy(() =>
+	import('../pages/SingleCharacterLayout/SingleCharacterLayout')
+)
 
 const AnimatedRoutes = () => {
 	const location = useLocation()
@@ -32,8 +38,23 @@ const AnimatedRoutes = () => {
 				<div ref={nodeRef}>
 					<Routes location={location}>
 						<Route path='/' element={<MainPage />} />
+						<Route
+							path='/characters/:id'
+							element={
+								<SinglePage
+									Component={SingleCharacterLayout}
+									datatype='character'
+								/>
+							}
+						/>
+						<Route
+							path='/comics/:id'
+							element={
+								<SinglePage Component={SingleComicLayout} datatype='comic' />
+							}
+						/>
 						<Route path='/comics' element={<ComicsPage />} />
-						<Route path='/comics/:id' element={<SingleComicPage />} />
+						<Route path='/comics/:id' element={<SingleComicLayout />} />
 						<Route path='*' element={<Page404 />} />
 					</Routes>
 				</div>
