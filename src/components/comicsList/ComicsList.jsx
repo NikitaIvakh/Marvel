@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import useMarvelService from '../../services/MarvelService'
 import SetContent from '../../utils/SetContentList'
@@ -49,9 +49,13 @@ const ComicsList = () => {
 		return <ul className='comics__grid'>{renderItems}</ul>
 	}
 
+	const elements = useMemo(() => {
+		return SetContent(() => renderComics(comics), process, loadingNewComics)
+	}, [process])
+
 	return (
 		<div className='comics__list'>
-			{SetContent(() => renderComics(comics), process, loadingNewComics)}
+			{elements}
 			<button
 				disabled={process === 'loading'}
 				onClick={() => onUpdateComics(offset)}

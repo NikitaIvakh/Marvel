@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Helmet } from 'react-helmet'
+import { Helmet, HelmetProvider } from 'react-helmet-async'
 import decoration from '../../resources/img/vision.png'
 import CharacterSearchForm from '../characterSearchForm/CharacterSearchForm'
 import CharInfo from '../charInfo/CharInfo'
@@ -17,13 +17,15 @@ const MainPage = () => {
 
 	return (
 		<>
-			<Helmet>
-				<meta
-					name='description'
-					content='A website for fans of the Marvel universe'
-				/>
-				<title>Marvel information portal</title>
-			</Helmet>
+			<HelmetProvider>
+				<Helmet>
+					<meta
+						name='description'
+						content='A website for fans of the Marvel universe'
+					/>
+					<title>Marvel information portal</title>
+				</Helmet>
+			</HelmetProvider>
 			<RandomCharErrorBoundary>
 				<RandomChar />
 			</RandomCharErrorBoundary>
