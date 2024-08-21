@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import useMarvelService from '../../services/MarvelService'
-import CharInfoError from '../errors/CharInfoError'
-import Skeleton from '../skeleton/Skeleton'
-import Spinner from '../spinner/Spinner'
+import SetContent from '../../utils/SetContent'
 import './charInfo.scss'
 
 const CharInfo = ({ onCharSelected }) => {
 	const [char, setChar] = useState(null)
-	const { loading, error, getCharacter, clearError } = useMarvelService()
+	const { getCharacter, clearError, process, setProcess } = useMarvelService()
 
 	useEffect(() => {
 		onUpdateCharacter()
@@ -17,32 +15,20 @@ const CharInfo = ({ onCharSelected }) => {
 	const onUpdateCharacter = () => {
 		if (!onCharSelected) return
 		clearError()
-		getCharacter(onCharSelected).then(onCharacterLoaded)
+		getCharacter(onCharSelected)
+			.then(onCharacterLoaded)
+			.then(() => setProcess('confirmed'))
 	}
 
 	const onCharacterLoaded = char => {
 		setChar(char)
 	}
 
-	const skeleton = char || loading || error ? null : <Skeleton />
-	const errorMessage = error ? <CharInfoError /> : null
-	const spinner = loading ? <Spinner /> : null
-	const content = !(loading || errorMessage || !char) ? (
-		<View char={char} />
-	) : null
-
-	return (
-		<div className='char__info'>
-			{skeleton}
-			{errorMessage}
-			{spinner}
-			{content}
-		</div>
-	)
+	return <div className='char__info'>{SetContent(View, process, char)}</div>
 }
 
-const View = ({ char }) => {
-	const { name, thumbnail, description, homepage, wiki, comics } = char
+const View = ({ data }) => {
+	const { name, thumbnail, description, homepage, wiki, comics } = data
 	const imgUrl =
 		'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg'
 	const imgStyle = thumbnail === imgUrl ? { objectFit: 'fill' } : null

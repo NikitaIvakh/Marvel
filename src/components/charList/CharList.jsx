@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types'
 import { useEffect, useRef, useState } from 'react'
-import { CSSTransition } from 'react-transition-group'
+import { CSSTransition, TransitionGroup } from 'react-transition-group'
 import useMarvelService from '../../services/MarvelService'
-import CharListError from '../errors/CharListError'
-import Spinner from '../spinner/Spinner'
+import SetContent from '../../utils/SetContentList'
 import './charList.scss'
 
 const CharList = props => {
@@ -12,7 +11,7 @@ const CharList = props => {
 	const [newItemLoading, setNewItemLoading] = useState(false)
 	const [charEnded, setCharEnded] = useState(false)
 
-	const { loading, error, getAllCharacters } = useMarvelService()
+	const { getAllCharacters, process, setProcess } = useMarvelService()
 
 	useEffect(() => {
 		onUpdateCharacters(offset, true)
@@ -20,7 +19,9 @@ const CharList = props => {
 
 	const onUpdateCharacters = (offset, initial) => {
 		initial ? setNewItemLoading(false) : setNewItemLoading(true)
-		getAllCharacters(offset).then(onCharactersLoaded)
+		getAllCharacters(offset)
+			.then(onCharactersLoaded)
+			.then(() => setProcess('confirmed'))
 	}
 
 	const onCharactersLoaded = newCharacters => {
@@ -34,7 +35,6 @@ const CharList = props => {
 	}
 
 	const itemRefs = useRef([])
-	const nodeRef = useRef(null)
 
 	const focusOnElement = id => {
 		itemRefs.current.forEach(item =>
@@ -52,12 +52,7 @@ const CharList = props => {
 			const duration = 500
 
 			return (
-				<CSSTransition
-					key={i}
-					nodeRef={nodeRef}
-					timeout={duration}
-					classNames='char__item'
-				>
+				<CSSTransition key={id} timeout={duration} classNames='char__item'>
 					<li
 						tabIndex={0}
 						ref={el => (itemRefs.current[i] = el)}
@@ -80,21 +75,19 @@ const CharList = props => {
 			)
 		})
 
-		return <ul className='char__grid'>{characterItems}</ul>
+		return (
+			<ul className='char__grid'>
+				<TransitionGroup component={null}>{characterItems}</TransitionGroup>
+			</ul>
+		)
 	}
-
-	const renderCharacters = renderItems(characters)
-	const errorMessage = error ? <CharListError /> : null
-	const spinner = loading && !newItemLoading ? <Spinner /> : null
 
 	return (
 		<div className='char__list'>
-			{errorMessage}
-			{spinner}
-			{renderCharacters}
+			{SetContent(() => renderItems(characters), process, newItemLoading)}
 			<button
 				className='button button__main button__long'
-				disabled={loading}
+				disabled={process === 'loading'}
 				onClick={() => onUpdateCharacters(offset)}
 				style={{ display: charEnded ? 'none' : 'block' }}
 			>
