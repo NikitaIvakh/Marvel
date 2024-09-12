@@ -33,16 +33,21 @@ const CharList = props => {
 		setOffset(offset => offset + 9)
 		setCharEnded(ended)
 	}
-
+	
 	const itemRefs = useRef([])
-
-	const focusOnElement = id => {
-		itemRefs.current.forEach(item =>
-			item.classList.remove('char__item_selected')
-		)
-		itemRefs.current[id].classList.add('char__item_selected')
-		itemRefs.current[id].focus()
-	}
+	
+	const focusOnElement = (id) => {
+		if (!itemRefs.current[id]) return;
+		
+		itemRefs.current.forEach(item => {
+			if (item) { // Ensure item exists
+				item.classList.remove('char__item_selected');
+			}
+		});
+		
+		itemRefs.current[id].classList.add('char__item_selected');
+		itemRefs.current[id].focus();
+	};
 
 	function renderItems(characters) {
 		const characterItems = characters.map(({ id, name, thumbnail }, i) => {

@@ -10,11 +10,11 @@ import RandomChar from '../randomChar/RandomChar'
 
 const MainPage = () => {
 	const [selectedChar, setChar] = useState(null)
-
+	
 	const onCharSelected = id => {
 		setChar(id)
 	}
-
+	
 	return (
 		<>
 			<HelmetProvider>
@@ -26,9 +26,7 @@ const MainPage = () => {
 					<title>Marvel information portal</title>
 				</Helmet>
 			</HelmetProvider>
-			<RandomCharErrorBoundary>
-				<RandomChar />
-			</RandomCharErrorBoundary>
+			<RandomChar />
 			<div className='char__content'>
 				<CharList onCharSelected={onCharSelected} />
 				<div>

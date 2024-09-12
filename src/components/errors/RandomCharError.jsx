@@ -1,15 +1,16 @@
 import errorGif from './error.gif'
+import "./errorMessage.scss"
 
 const RandomCharError = () => {
 	const btnActiveStyle = {
 		pointerEvents: 'none',
 		opacity: 0.5,
-		cursor: 'not-allowed',
+		cursor: 'not-allowed'
 	}
-
+	
 	return (
 		<div className='randomchar__block'>
-			<img src={errorGif} alt='Random character' className='randomchar__img' />
+			<img src={errorGif} alt='Random character' className='errorMessage' />
 			<div className='randomchar__info'>
 				<p className='randomchar__name'>NOT FOUND</p>
 				<p className='randomchar__descr'>CHARACTER NOT FOUND</p>
@@ -17,11 +18,7 @@ const RandomCharError = () => {
 					<a href='##' className='button button__main' style={btnActiveStyle}>
 						<div className='inner'>NOT FOUND</div>
 					</a>
-					<a
-						href='##'
-						className='button button__secondary'
-						style={btnActiveStyle}
-					>
+					<a href='##' className='button button__secondary' style={btnActiveStyle}>
 						<div className='inner'>NOT FOUND</div>
 					</a>
 				</div>

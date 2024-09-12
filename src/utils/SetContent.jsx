@@ -1,4 +1,4 @@
-import CharInfoError from '../components/errors/CharInfoError'
+import RandomCharError from '../components/errors/RandomCharError'
 import Skeleton from '../components/skeleton/Skeleton'
 import Spinner from '../components/spinner/Spinner'
 
@@ -11,7 +11,7 @@ const SetContent = (Component, process, data) => {
 		case 'confirmed':
 			return <Component data={data} />
 		case 'error':
-			return <CharInfoError />
+			return <RandomCharError />
 		default:
 			throw new Error(`Unexpected process state`)
 	}
